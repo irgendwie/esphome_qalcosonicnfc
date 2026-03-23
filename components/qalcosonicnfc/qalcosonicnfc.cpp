@@ -382,6 +382,14 @@ void QalcosonicNfc::publishSensors() {
                     this->battery_level_sensor_->publish_state(batteryPercentage);
                     break;
                 }
+
+            case 0xfdfe:
+                {
+                    uint32_t errorFlags = uint32_t(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0])
+                    ESP_LOGI(TAG, "Error Flags: %x", errorFlags);
+                    this->error_flags_sensor_->publish_state(errorFlags);
+                    break;
+                }
         }
 
         buf += data_size;
@@ -395,6 +403,7 @@ void QalcosonicNfc::publishSensorsAsFailed() {
     this->water_flow_sensor_->publish_state(NAN);
     this->water_temperature_sensor_->publish_state(NAN);
     this->battery_level_sensor_->publish_state(NAN);
+    this->error_flags_sensor_->publish_state(NAN);
     //this->raw_data_sensor_->publish_state(NAN);
     this->status_set_error();
 }
