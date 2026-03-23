@@ -89,6 +89,7 @@ class QalcosonicNfc : public esphome::PollingComponent {
   sensor::Sensor *water_temperature_sensor_{nullptr};
   sensor::Sensor *external_temperature_sensor_{nullptr};
   sensor::Sensor *battery_level_sensor_{nullptr};
+  sensor::Sensor *error_flags_sensor_{nullptr};
   text_sensor::TextSensor *timepoint_sensor_{nullptr};
   text_sensor::TextSensor *raw_data_sensor_{nullptr};
   void publishSensors();
@@ -103,6 +104,7 @@ class QalcosonicNfc : public esphome::PollingComponent {
   void set_water_temperature_sensor(sensor::Sensor *water_temperature_sensor) { water_temperature_sensor_ = water_temperature_sensor; }
   void set_external_temperature_sensor(sensor::Sensor *external_temperature_sensor) { external_temperature_sensor_ = external_temperature_sensor; }
   void set_battery_level_sensor(sensor::Sensor *battery_level_sensor) { battery_level_sensor_ = battery_level_sensor; }
+  void set_error_flags_sensor(sensor::Sensor *error_flags_sensor) { error_flags_sensor_ = error_flags_sensor; }
   void set_timepoint_sensor(text_sensor::TextSensor *timepoint_sensor) { timepoint_sensor_ = timepoint_sensor; }
   void set_raw_data_sensor(text_sensor::TextSensor *raw_data_sensor) { raw_data_sensor_ = raw_data_sensor; }
   void setup() override;

@@ -26,6 +26,7 @@ CONF_WATER_FLOW_SENSOR = "water_flow_sensor"
 CONF_WATER_TEMPERATURE_SENSOR = "water_temperature_sensor"
 CONF_EXTERNAL_TEMPERATURE_SENSOR = "external_temperature_sensor"
 CONF_BATTERY_LEVEL_SENSOR = "battery_level_sensor"
+CONF_ERROR_FLAGS_SENSOR = "error_flags_sensor"
 CONF_TIMEPOINT_SENSOR = "timepoint_sensor"
 CONF_RAW_DATA_SENSOR = "raw_data_sensor"
 
@@ -78,6 +79,7 @@ CONFIG_SCHEMA = (
                 icon=ICON_BATTERY,
                 state_class=STATE_CLASS_MEASUREMENT,
                 device_class=DEVICE_CLASS_BATTERY,),
+            cv.Optional(CONF_ERROR_FLAGS_SENSOR, default={ CONF_NAME: "Error Flags",}): text_sensor.text_sensor_schema(),
             cv.Optional(CONF_RAW_DATA_SENSOR, default={ CONF_NAME: "Raw M-BUS Data",}): text_sensor.text_sensor_schema(),
             cv.Optional(CONF_TIMEPOINT_SENSOR, default={ CONF_NAME: "Timepoint",}): text_sensor.text_sensor_schema(),
             cv.Required(CONF_PN5180_MOSI_PIN): pins.gpio_output_pin_schema,
