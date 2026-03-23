@@ -271,6 +271,35 @@ void QalcosonicNfc::update() {
   ESP_LOGD(TAG, "Update cycle finished");
 }
 
+uint8_t getDataLength(uint8_t dif) {
+    static const uint8_t dataLengths[] = {
+        0,  // 0x00: No data
+        1,  // 0x01: 8-bit Integer
+        2,  // 0x02: 16-bit Integer
+        3,  // 0x03: 24-bit Integer
+        4,  // 0x04: 32-bit Integer
+        4,  // 0x05: 32-bit Real
+        6,  // 0x06: 48-bit Integer
+        8,  // 0x07: 64-bit Integer
+        0,  // 0x08: Selection for readout
+        1,  // 0x09: 2-digit BCD
+        2,  // 0x0A: 4-digit BCD
+        3,  // 0x0B: 6-digit BCD
+        4,  // 0x0C: 8-digit BCD
+        0,  // 0x0D: Variable length (handled separately)
+        6,  // 0x0E: 12-digit BCD
+        0   // 0x0F: Special functions
+    };
+
+    uint8_t type = dif & 0x0F;
+
+    if (type == 0x08 || type == 0x0D || type == 0x0F) {
+        ESP_LOGD(TAG, "Data length type %x not implemented", type);
+    }
+
+    return dataLengths[type];
+}
+
 void QalcosonicNfc::publishSensors() {
     // Generate the final measurements from the returned buffer
     for (uint8_t *buf = this->readBuffer + 20; buf < this->readBuffer + responseLength;)
@@ -281,6 +310,7 @@ void QalcosonicNfc::publishSensors() {
         uint8_t vife = vif & 0x80 ? *buf++ : 0;
         while (buf[-1] & 0x80) buf++; // skip further VIF extension bytes (we need only the first one)
         ESP_LOGD(TAG, "DIF:%02x VIF:%02x VIFE:%02x", dif, vif, vife);
+        uint8_t data_size = getDataLength(dif); // get data length
         switch (vif << 8 | vife) 
         {
             case 0x1300:
@@ -354,7 +384,6 @@ void QalcosonicNfc::publishSensors() {
                 }
         }
 
-        uint8_t data_size = dif & 0x0f;
         buf += data_size;
     }
     
